@@ -26,6 +26,22 @@ _start:
   or al, 2 
   out 0x92, al 
 
+  ; remap the master PIC - programmable interrupt controller
+  ; put the pic in initalize mode
+  mov al, 00010001b
+  ; tell the master PIC
+  out 0x20, al
+
+  ; interrupt 0x20 is where master ISR - Interrupt Service Routines should start
+  mov al, 0x20
+  out 0x21, al
+
+  mov al, 00000001b
+  out 0x21, al
+
+  ; enable interrupts
+  sti
+
   call kernel_main
 
   jmp $
