@@ -1,6 +1,8 @@
 ; set 32 bit code 
 [BITS 32]
+
 global _start
+extern kernel_main
 
 ; set code and data offset addresses
 CODE_SEQ equ 0x08
@@ -21,6 +23,8 @@ _start:
   in al, 0x92
   or al, 2 
   out 0x92, al 
+
+  call kernel_main
 
   jmp $
 
