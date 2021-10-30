@@ -2,10 +2,11 @@
 [BITS 32]
 
 global _start
+
 extern kernel_main
 
 ; set code and data offset addresses
-CODE_SEQ equ 0x08
+CODE_SEG equ 0x08
 DATA_SEG equ 0x10
 
 _start:
