@@ -9,6 +9,7 @@ CODE_SEQ equ 0x08
 DATA_SEG equ 0x10
 
 _start:
+  ; init data and stack segment
   mov ax, DATA_SEG
   mov ds, ax
   mov es, ax
