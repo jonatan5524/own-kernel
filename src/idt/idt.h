@@ -26,6 +26,7 @@ struct idtr_desc
   uint32_t base;
 } __attribute__((packed));
 
-
 void idt_init();
+void enable_interrupts();
+void disable_interrupts();
 #endif

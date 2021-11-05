@@ -81,4 +81,5 @@ void kernel_main()
   kernel_heap_init();
   
   idt_init();
+  enable_interrupts();
 }
