@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "io/io.h"
+#include  "memory/heap/kernelHeap.h"
 
 uint16_t* video_memory = 0;
 uint16_t terminal_row = 0;
@@ -77,5 +78,7 @@ void kernel_main()
   terminal_initalize();
   print("Hello World!\nstrs");
 
+  kernel_heap_init();
+  
   idt_init();
 }
