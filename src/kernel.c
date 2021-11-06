@@ -5,9 +5,8 @@
 #include "io/io.h"
 #include "memory/paging/paging.h"
 #include "memory/heap/kernelHeap.h"
-#include "disk/disk.h"
 #include "string/string.h"
-#include "fileSystem/pathParser.h"
+#include "disk/disk.h"
 
 uint16_t* video_memory = 0;
 uint16_t terminal_row = 0;
