@@ -1,3 +1,4 @@
+; vim: set ft=nasm :
 [BITS 32]
 
 section .asm

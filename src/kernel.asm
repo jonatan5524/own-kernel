@@ -1,3 +1,4 @@
+; vim: set ft=nasm :
 ; set 32 bit code 
 [BITS 32]
 

@@ -1,3 +1,4 @@
+; vim: set ft=nasm :
 ORG 0x7c00
 ; boot processer mode - 16bit mode
 BITS 16

@@ -1,3 +1,4 @@
+; vim: set ft=nasm :
 section .asm
 
 global idt_load
