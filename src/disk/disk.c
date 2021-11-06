@@ -1,4 +1,10 @@
+#include "disk.h"
+#include "../config.h"
+#include "../memory/memory.h"
+#include "../status.h"
 #include "../io/io.h"
+
+struct disk disk;
 
 int disk_read_sector(int lba, int total, void* buffer)
 {
@@ -30,4 +36,31 @@ int disk_read_sector(int lba, int total, void* buffer)
   }
 
   return 0;
+}
+
+void disk_search_and_init()
+{
+  memset(&disk, 0, sizeof(disk));
+  disk.type = DISK_TYPE_REAL;
+  disk.sector_size = SECTOR_SIZE;
+}
+
+struct disk* disk_get(int index)
+{
+  if (index != 0)
+  {
+    return 0;
+  }
+
+  return &disk;
+}
+
+int disk_read_block(struct disk* idisk, unsigned int lba, int total, void* buffer)
+{
+  if (idisk != &disk)
+  {
+    return -INVALID_ARGUMENT_ERROR;
+  }
+
+  return disk_read_sector(lba, total, buffer);
 }
