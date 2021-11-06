@@ -6,6 +6,8 @@
 #include "memory/paging/paging.h"
 #include "memory/heap/kernelHeap.h"
 #include "disk/disk.h"
+#include "string/string.h"
+#include "fileSystem/pathParser.h"
 
 uint16_t* video_memory = 0;
 uint16_t terminal_row = 0;
@@ -54,15 +56,6 @@ void terminal_initalize()
         terminal_putchar(col, row, ' ', 0);
     }      
   }
-}
-
-size_t strlen(const char* str) 
-{
-  size_t len = 0;
-
-  while (str[len++]);
-
-  return len;
 }
 
 void print(const char* str)
