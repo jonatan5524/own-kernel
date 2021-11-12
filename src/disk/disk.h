@@ -1,6 +1,8 @@
 #ifndef DISK_H
 #define DISK_H
 
+#include "../fileSystem/file.h"
+
 typedef unsigned int DISK_TYPE;
 
 // represent real physical hard disk 
@@ -10,6 +12,8 @@ struct disk
 {
   DISK_TYPE type;
   int sector_size;
+
+  struct filesystem* filesystem;
 };
 
 void disk_search_and_init();
