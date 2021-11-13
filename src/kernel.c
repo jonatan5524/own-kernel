@@ -2,6 +2,7 @@
 #include "idt/idt.h"
 #include <stddef.h>
 #include <stdint.h>
+#include "./fileSystem/file.h"
 #include "io/io.h"
 #include "memory/paging/paging.h"
 #include "memory/heap/kernelHeap.h"
@@ -76,6 +77,9 @@ void kernel_main()
 
   // initialize the heap 
   kernel_heap_init();
+
+  // Initizalize fle systems
+  fs_init();
 
   // search and initialize the disks
   disk_search_and_init();

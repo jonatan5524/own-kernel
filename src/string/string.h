@@ -9,5 +9,6 @@ size_t strlen(const char* str);
 size_t strnlen(const char* str, int max);
 int to_numeric_digit(char c);
 bool is_digit(char c);
+char* strcpy(char* dest, const char* src);
 
 #endif 

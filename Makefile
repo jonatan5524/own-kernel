@@ -1,4 +1,4 @@
-FILES = ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o  ./build/idt/idt.o ./build/memory/memory.o ./build/io/io.asm.o ./build/memory/heap/heap.o ./build/memory/heap/kernelHeap.o ./build/memory/paging/paging.o ./build/memory/paging/paging.asm.o ./build/disk/disk.o ./build/string/string.o ./build/fileSystem/pathParser.o ./build/fileSystem/file.o ./build/disk/streamer.o
+FILES = ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o  ./build/idt/idt.o ./build/memory/memory.o ./build/io/io.asm.o ./build/memory/heap/heap.o ./build/memory/heap/kernelHeap.o ./build/memory/paging/paging.o ./build/memory/paging/paging.asm.o ./build/disk/disk.o ./build/string/string.o ./build/fileSystem/pathParser.o ./build/fileSystem/file.o ./build/disk/streamer.o ./build/fileSystem/fat/fat16.o
 INCLUDES = -I./src
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
@@ -64,6 +64,9 @@ all: ./bin/boot.bin ./bin/kernel.bin
 
 ./build/fileSystem/file.o: ./src/fileSystem/file.c
 	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/fileSystem -std=gnu99 -c ./src/fileSystem/file.c -o ./build/fileSystem/file.o
+
+./build/fileSystem/fat/fat16.o: ./src/fileSystem/fat/fat16.c
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/fileSystem -I./src/fileSystem/fat -std=gnu99 -c ./src/fileSystem/fat/fat16.c -o ./build/fileSystem/fat/fat16.o
 
 ./build/disk/streamer.o: ./src/disk/streamer.c
 	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/disk -std=gnu99 -c ./src/disk/streamer.c -o ./build/disk/streamer.o

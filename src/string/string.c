@@ -28,3 +28,19 @@ int to_numeric_digit(char c)
 {
   return c - 48;
 }
+
+char* strcpy(char* dest, const char* src)
+{
+  char* res = dest;
+
+  while(*src)
+  {
+    *dest = *src;
+    src++;
+    dest++;
+  }
+
+  *dest = 0x00;
+
+  return res;
+}
