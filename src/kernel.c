@@ -103,7 +103,12 @@ void kernel_main()
 
   if (fd)
   {
-    print("we opened hello.txt\n");
+    print("\nwe opened hello.txt\n");
+    
+    char buffer[14];
+    fread(buffer, 13, 1, fd);
+    buffer[13] = 0x00;
+    print(buffer);
   }
 
   while(1) {}
