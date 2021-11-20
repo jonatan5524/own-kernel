@@ -106,7 +106,8 @@ void kernel_main()
     print("\nwe opened hello.txt\n");
     
     char buffer[14];
-    fread(buffer, 13, 1, fd);
+    fseek(fd, 2, SEEK_SET);
+    fread(buffer, 11, 1, fd);
     buffer[13] = 0x00;
     print(buffer);
   }

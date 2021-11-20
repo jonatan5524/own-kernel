@@ -8,5 +8,5 @@
 #define BAD_PATH_ERROR 4 
 #define FILE_SYSTEM_NOT_US_ERROR 5
 #define READ_ONLY_ERROR 6
-
+#define UNIMPLEMENTED_ERROR 7
 #endif
