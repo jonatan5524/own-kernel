@@ -8,6 +8,7 @@
 #include "./fat/fat16.h"
 #include "../status.h"
 #include "pathParser.h"
+#include <stdint.h>
 
 struct filesystem* filesystems[OS_MAX_FILESYSTEMS];
 struct file_descriptor* file_descriptors[OS_MAX_FILE_DESCRIPTORS];
@@ -191,5 +192,29 @@ out:
   {
     res = 0;
   }
+  return res;
+}
+
+int fread(void* ptr, uint32_t size, uint32_t nmemb, int fd)
+{
+  int res = 0;
+
+  if (size ==0 || nmemb == 0 || fd < 1)
+  {
+    res = -INVALID_ARGUMENT_ERROR;
+    goto out;
+  }
+
+  struct file_descriptor* descriptor = file_get_descriptor(fd);
+
+  if (!descriptor)
+  {
+    res = -INVALID_ARGUMENT_ERROR;
+    goto out;
+  }
+
+  res = descriptor->filesystem->read(descriptor->disk, descriptor->private, size, nmemb, (char*) ptr);
+
+out:
   return res;
 }
