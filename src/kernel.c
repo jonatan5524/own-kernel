@@ -103,13 +103,9 @@ void kernel_main()
 
   if (fd)
   {
-    print("\nwe opened hello.txt\n");
-    
-    char buffer[14];
-    fseek(fd, 2, SEEK_SET);
-    fread(buffer, 11, 1, fd);
-    buffer[13] = 0x00;
-    print(buffer);
+    struct file_stat stat;
+    fstat(fd, &stat);
+
   }
 
   while(1) {}
