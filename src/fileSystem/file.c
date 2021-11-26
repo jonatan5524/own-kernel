@@ -231,6 +231,24 @@ int fseek(int fd, int offset, FILE_SEEK_MODE whence)
   }
   
   res = descriptor->filesystem->seek(descriptor->private, offset, whence);
+
+out:
+  return res;
+}
+
+int fstat(int fd, struct file_stat* stat)
+{
+  int res = 0;
+  struct file_descriptor* descriptor = file_get_descriptor(fd);
+
+  if (!descriptor)
+  {
+    res = -INVALID_ARGUMENT_ERROR;
+    goto out;
+  }
+  
+  res = descriptor->filesystem->stat(descriptor->disk, descriptor->private, stat);
+
 out:
   return res;
 }
