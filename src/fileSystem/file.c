@@ -60,6 +60,12 @@ void fs_init()
   fs_load();
 }
 
+static void file_free_descriptor(struct file_descriptor* descriptor)
+{
+  file_descriptors[descriptor->index - 1] = 0;
+  kernel_free(descriptor);
+}
+
 static int file_new_descriptor(struct file_descriptor** descriptor_out)
 {
   int res = -NO_MEMORY_ERROR;
@@ -265,6 +271,11 @@ int fclose(int fd)
   }
 
   res = descriptor->filesystem->close(descriptor->private);
+  
+  if (res == ALL_OK)
+  {
+    file_free_descriptor(descriptor);
+  }
 
 out:
   return res;

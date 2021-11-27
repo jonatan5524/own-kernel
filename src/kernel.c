@@ -105,7 +105,10 @@ void kernel_main()
   {
     struct file_stat stat;
     fstat(fd, &stat);
+    
+    fclose(fd);
 
+    print("testing\n");
   }
 
   while(1) {}
