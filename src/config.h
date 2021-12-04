@@ -18,4 +18,6 @@
 #define OS_MAX_FILE_DESCRIPTORS 512
 
 #define OS_MAX_PATH 108
+
+#define TOTAL_GDT_SEGMENTS 3
 #endif
