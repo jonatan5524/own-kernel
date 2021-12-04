@@ -77,6 +77,83 @@ int paging_get_indexes(void* virtual_address, uint32_t* directory_index_out, uin
   return res;
 }
 
+void* paging_align_address(void* ptr)
+{
+  if ((uint32_t) ptr % PAGING_PAGE_SIZE)
+  {
+    return (void*)((uint32_t) ptr + PAGING_PAGE_SIZE - ((uint32_t)ptr % PAGING_PAGE_SIZE));
+  }
+
+  return ptr;
+}
+
+int paging_map(uint32_t* directory, void* virtual_address, void* physical_address, int flags)
+{
+  if (((unsigned int)virtual_address % PAGING_PAGE_SIZE) || ((unsigned int) physical_address % PAGING_PAGE_SIZE))
+  {
+    return -INVALID_ARGUMENT_ERROR;
+  }
+
+  return paging_set_physical_address(directory, virtual_address, (uint32_t) physical_address | flags);
+}
+
+int paging_map_range(uint32_t* directory, void* virtual_address, void* physical_address, int total_pages, int flags)
+{
+  int res = 0;
+
+  for (int i = 0; i < total_pages; i++)
+  {
+    res = paging_map(directory, virtual_address, physical_address, flags);
+
+    if (res == 0)
+    {
+      break;
+    }
+
+    virtual_address += PAGING_PAGE_SIZE;
+    physical_address += PAGING_PAGE_SIZE;
+  }
+
+  return res;
+}
+
+int paging_map_to(uint32_t* directory, void* virtual_address, void* physical_address, void* physical_end_address, int flags)
+{
+  int res = 0;
+  
+  if ((uint32_t)virtual_address % PAGING_PAGE_SIZE)
+  {
+    res = -INVALID_ARGUMENT_ERROR;
+    goto out;
+  }
+
+  if ((uint32_t)physical_address % PAGING_PAGE_SIZE)
+  {
+    res = -INVALID_ARGUMENT_ERROR;
+    goto out;
+  }
+
+  if ((uint32_t)physical_end_address % PAGING_PAGE_SIZE)
+  {
+    res = -INVALID_ARGUMENT_ERROR;
+    goto out;
+  }
+
+  if ((uint32_t) physical_end_address < (uint32_t)physical_address)
+  {
+    res = -INVALID_ARGUMENT_ERROR;
+    goto out;
+  }
+
+  uint32_t total_bytes = physical_end_address - physical_address;
+  int total_pages = total_bytes / PAGING_PAGE_SIZE;
+
+  res = paging_map_range(directory, virtual_address, physical_address, total_pages, flags);
+
+out:
+  return res;
+}
+
 int paging_set_physical_address(uint32_t* directory, void* virtual_address, uint32_t val)
 {
   if (!paging_is_aligned(virtual_address))

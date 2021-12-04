@@ -1,4 +1,4 @@
-FILES = ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o  ./build/idt/idt.o ./build/task/tss.asm.o ./build/task/task.o ./build/gdt/gdt.asm.o ./build/gdt/gdt.o ./build/memory/memory.o ./build/io/io.asm.o ./build/memory/heap/heap.o ./build/memory/heap/kernelHeap.o ./build/memory/paging/paging.o ./build/memory/paging/paging.asm.o ./build/disk/disk.o ./build/string/string.o ./build/fileSystem/pathParser.o ./build/fileSystem/file.o ./build/disk/streamer.o ./build/fileSystem/fat/fat16.o
+FILES = ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o  ./build/idt/idt.o ./build/task/tss.asm.o  ./build/task/process.o ./build/task/task.o ./build/gdt/gdt.asm.o ./build/gdt/gdt.o ./build/memory/memory.o ./build/io/io.asm.o ./build/memory/heap/heap.o ./build/memory/heap/kernelHeap.o ./build/memory/paging/paging.o ./build/memory/paging/paging.asm.o ./build/disk/disk.o ./build/string/string.o ./build/fileSystem/pathParser.o ./build/fileSystem/file.o ./build/disk/streamer.o ./build/fileSystem/fat/fat16.o
 INCLUDES = -I./src
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
@@ -43,6 +43,9 @@ all: ./bin/boot.bin ./bin/kernel.bin
 
 ./build/memory/memory.o: ./src/memory/memory.c
 	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/memory -std=gnu99 -c ./src/memory/memory.c -o ./build/memory/memory.o
+
+./build/task/process.o: ./src/task/process.c
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/task -std=gnu99 -c ./src/task/process.c -o ./build/task/process.o
 
 ./build/task/task.o: ./src/task/task.c
 	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/task -std=gnu99 -c ./src/task/task.c -o ./build/task/task.o
