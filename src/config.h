@@ -19,5 +19,6 @@
 
 #define OS_MAX_PATH 108
 
-#define TOTAL_GDT_SEGMENTS 3
+#define TOTAL_GDT_SEGMENTS 6
+
 #endif

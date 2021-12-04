@@ -12,6 +12,7 @@
 #include "gdt/gdt.h"
 #include "config.h"
 #include "memory/memory.h"
+#include "task/tss.h"
 
 uint16_t* video_memory = 0;
 uint16_t terminal_row = 0;
@@ -81,6 +82,7 @@ void panic(const char* msg)
   while(1) {}
 }
 
+struct tss tss;
 struct gdt gdt_real[TOTAL_GDT_SEGMENTS];
 struct gdt_structured gdt_structured[TOTAL_GDT_SEGMENTS] = {
   // NULL Segment
@@ -100,6 +102,24 @@ struct gdt_structured gdt_structured[TOTAL_GDT_SEGMENTS] = {
     .base = 0x00,
     .limit = 0xFFFFFFFF,
     .type = 0x92
+  },
+  // User Code Segment
+  {
+    .base = 0x00,
+    .limit = 0xFFFFFFFF,
+    .type = 0xF8
+  },
+  // User Data Segment 
+  {
+    .base = 0x00,
+    .limit = 0xFFFFFFFF,
+    .type = 0xF2
+  },
+  // TSS Segment
+  {
+    .base = (uint32_t)&tss,
+    .limit = sizeof(tss),
+    .type = 0xE9
   }
 };
 
@@ -123,6 +143,14 @@ void kernel_main()
 
   // initialize the interrupt descriptor table
   idt_init();
+
+  // Setup TSS
+  memset(&tss, 0x00, sizeof(tss));
+  tss.esp0 = 0x600000;
+  tss.ss0 = KERNEL_DATA_SELECTOR;
+  
+  // Load TSS
+  tss_load(0x28);
 
   // setup paging 
   kernel_chunk = paging_new_4gb(PAGING_IS_WRITEABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
