@@ -2,6 +2,7 @@
 #include "../config.h"
 #include "../memory/memory.h"
 #include "../kernel.h"
+#include "../task/task.h"
 #include "../io/io.h"
 #include <stdint.h>
 
@@ -60,4 +61,23 @@ void idt_init()
   idt_set(0x21, int21h);
 
   idt_load(&idtr_descriptor);
+}
+
+void isr80h_handle_command(int command, struct interrupt_frame* frame)
+{
+
+}
+
+void* isr80h_handler(int command, struct interrupt_frame* frame)
+{
+  void* res = 0;
+
+  kernel_page();
+  task_current_save_state(frame);
+
+  res = isr80h_handle_command(command, frame);
+
+  task_page();
+
+  return res;
 }
