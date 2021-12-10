@@ -1,4 +1,7 @@
 #include "kernel.h"
+#include "status.h"
+#include "task/task.h"
+#include "task/process.h"
 #include "gdt/gdt.h"
 #include "idt/idt.h"
 #include <stddef.h>
@@ -13,6 +16,7 @@
 #include "config.h"
 #include "memory/memory.h"
 #include "task/tss.h"
+#include "status.h"
 
 uint16_t* video_memory = 0;
 uint16_t terminal_row = 0;
@@ -161,20 +165,15 @@ void kernel_main()
   // enable paging
   enable_paging();
 
-  // enable interrupts
-  enable_interrupts();
+  struct process* process = 0;
+  int res = process_load("0:/blank.bin", &process);
 
-  int fd = fopen("0:/hello.txt", "r");
-
-  if (fd)
+  if (res != ALL_OK)
   {
-    struct file_stat stat;
-    fstat(fd, &stat);
-    
-    fclose(fd);
-
-    print("testing\n");
+    panic("failed to load blank.bin");
   }
+
+  task_run_first_ever_task();
 
   while(1) {}
 }
