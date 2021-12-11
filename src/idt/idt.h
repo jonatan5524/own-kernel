@@ -1,9 +1,11 @@
 #ifndef IDT_H
 #define IDT_H
-#include <bits/stdint-uintn.h>
 #include <stdint.h>
 
 // interrupt descriptor table
+
+struct interrupt_frame;
+typedef void*(*ISR80H_COMMAND)(struct interrupt_frame* frame);
 
 struct idt_desc
 {
@@ -47,4 +49,6 @@ struct interrupt_frame
 void idt_init();
 void enable_interrupts();
 void disable_interrupts();
+void isr80h_register_command(int command, ISR80H_COMMAND command_func);
+
 #endif

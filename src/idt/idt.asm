@@ -72,10 +72,10 @@ isr80h_wrapper:
 
   ; Restore general purpose registers for user land
   popad
-  mov eax, [temp_res]
+  mov eax, [tmp_res]
 
   iretd
 
 section .data
 ; Stored the return result from isr80h_handler 
-temp_res: dd 0 
+tmp_res: dd 0 
