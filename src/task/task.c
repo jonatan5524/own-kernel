@@ -5,6 +5,7 @@
 #include "../status.h"
 #include "../kernel.h"
 #include "../memory/heap/kernelHeap.h"
+#include <stdint.h>
 
 // The current task that is running 
 struct task* current_task = 0;
@@ -121,6 +122,14 @@ int task_page()
   return 0;
 }
 
+int task_page_task(struct task* task)
+{
+  user_registers();
+  paging_switch(task->page_directory);
+
+  return 0;
+}
+
 void task_run_first_ever_task()
 {
   if (!current_task)
@@ -179,4 +188,21 @@ void task_current_save_state(struct interrupt_frame* frame)
   struct task* task = task_current();
 
   task_save_state(task, frame);
+}
+
+void* task_get_stack_item(struct task* task, int index)
+{
+  void* result = 0;
+
+  uint32_t* stack_pointer = (uint32_t*) task->registers.esp;
+  
+  // Switch to the given tasks page
+  task_page_task(task);
+
+  result = (void*) stack_pointer[index];
+
+  // Switch back to the kernel page
+  kernel_page();
+
+  return result;
 }

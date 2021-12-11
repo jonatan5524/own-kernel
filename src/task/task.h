@@ -57,5 +57,7 @@ void restore_general_purpose_registers(struct registers* regs);
 void user_registers();
 
 void task_current_save_state(struct interrupt_frame* frame);
+void* task_get_stack_item(struct task* task, int index);
+int task_page_task(struct task* task);
 
 #endif 
