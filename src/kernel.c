@@ -16,6 +16,7 @@
 #include "config.h"
 #include "memory/memory.h"
 #include "task/tss.h"
+#include "isr80h/isr80h.h"
 #include "status.h"
 
 uint16_t* video_memory = 0;
@@ -170,6 +171,9 @@ void kernel_main()
 
   // enable paging
   enable_paging();
+
+  // registers the kernel commands
+  isr80h_register_commands();
 
   struct process* process = 0;
   int res = process_load("0:/blank.bin", &process);

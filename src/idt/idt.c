@@ -69,7 +69,7 @@ void idt_init()
 
 void isr80h_register_command(int command, ISR80H_COMMAND command_func)
 {
-  if (command <= 0 || command >= OS_MAX_ISR80H_COMMANDS)
+  if (command < 0 || command >= OS_MAX_ISR80H_COMMANDS)
   {
     panic("The command is out of bounds\n");
   }
@@ -84,7 +84,7 @@ void isr80h_register_command(int command, ISR80H_COMMAND command_func)
 
 void* isr80h_handle_command(int command, struct interrupt_frame* frame)
 {
-  if (command <= 0 || command >= OS_MAX_ISR80H_COMMANDS)
+  if (command < 0 || command >= OS_MAX_ISR80H_COMMANDS)
   {
     return 0;
   }
