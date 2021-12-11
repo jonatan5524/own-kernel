@@ -176,3 +176,16 @@ int paging_set_physical_address(uint32_t* directory, void* virtual_address, uint
 
   return 0;
 }
+
+uint32_t paging_get(uint32_t* directory, void* virtual_address)
+{
+  uint32_t directory_index = 0;
+  uint32_t table_index = 0;
+
+  paging_get_indexes(virtual_address, &directory_index, &table_index);
+
+  uint32_t entry = directory[directory_index];
+  uint32_t* table = (uint32_t*)(entry & 0xFFFFF000);
+
+  return table[table_index];
+}

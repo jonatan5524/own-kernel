@@ -1,4 +1,5 @@
 #include "task.h"
+#include "../string/string.h"
 #include "../idt/idt.h"
 #include "process.h"
 #include "../memory/memory.h"
@@ -112,6 +113,49 @@ int task_switch(struct task* task)
   paging_switch(task->page_directory);
 
   return 0;
+}
+
+int copy_string_from_task(struct task* task, void* virtual_address, void* physical_address, int max)
+{
+  if (max >= PAGING_PAGE_SIZE)
+  {
+    return -INVALID_ARGUMENT_ERROR;
+  }
+
+  int res = 0;
+  char* tmp = kernel_zalloc(max);
+
+  if (!tmp)
+  {
+    res = -NO_MEMORY_ERROR;
+    goto out;
+  }
+
+  uint32_t* task_directory = task->page_directory->directory_entry;
+  uint32_t old_entry = paging_get(task_directory, tmp);
+
+  paging_map(task->page_directory, tmp, tmp, PAGING_IS_WRITEABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
+  paging_switch(task->page_directory);
+
+  strncpy(tmp, virtual_address, max);
+
+  kernel_page();
+
+  res = paging_set_physical_address(task_directory, tmp, old_entry);
+
+  if (res < 0)
+  {
+    res = -IO_ERROR;
+    goto out_free;
+  }
+
+  strncpy(physical_address, tmp, max);
+
+out_free:
+  kernel_free(tmp);
+
+out:
+  return res;
 }
 
 int task_page()
