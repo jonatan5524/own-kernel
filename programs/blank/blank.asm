@@ -5,13 +5,13 @@ section .asm
 global _start 
 
 _start:
-
-  push 20
-  push 30
-
-  ; Command 0 - sum
-  mov eax, 0 
+  
+  push massage
+  mov eax, 1 ; Command print
   int 0x80
-  add esp, 8
+  add esp, 4
 
   jmp $
+
+section .data
+massage: db 'Hello World From task!', 0

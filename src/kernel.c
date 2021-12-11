@@ -137,7 +137,6 @@ struct gdt_structured gdt_structured[TOTAL_GDT_SEGMENTS] = {
 void kernel_main()
 {
   terminal_initalize();
-  print("Hello World!\nstrs");
 
   memset(gdt_real, 0x00, sizeof(gdt_real));
   gdt_structured_to_gdt(gdt_real, gdt_structured, TOTAL_GDT_SEGMENTS);
