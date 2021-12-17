@@ -34,4 +34,6 @@
 
 #define OS_MAX_ISR80H_COMMANDS 1024
 
+#define OS_KEYBOARD_BUFFER_SIZE 1024
+
 #endif
