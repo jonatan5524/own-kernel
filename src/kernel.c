@@ -186,8 +186,6 @@ void kernel_main()
     panic("failed to load blank.bin");
   }
 
-  keyboard_push('A');
-
   task_run_first_ever_task();
 
   while(1) {}
