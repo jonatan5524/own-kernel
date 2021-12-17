@@ -33,16 +33,6 @@ void interrupt_handler(int interrupt, struct interrupt_frame* frame)
   outb(0x20, 0x20);
 }
 
-void no_interrupt_handler()
-{
-  outb(0x20, 0x20);
-}
-
-void idt_zero()
-{
-  print("Divide by zero error\n");
-}
-
 void idt_set(int interrupt_number, void* address)
 {
   struct idt_desc* descriptor = &idt_descriptors[interrupt_number];
@@ -71,7 +61,6 @@ void idt_init()
   idtr_descriptor.limit = sizeof(idt_descriptors) - 1;
   idtr_descriptor.base = (uint32_t) idt_descriptors;
 
-  idt_set(0, idt_zero);
   idt_set(0x80, isr80h_wrapper);
 
   idt_load(&idtr_descriptor);

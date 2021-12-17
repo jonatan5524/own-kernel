@@ -2,14 +2,12 @@
 section .asm
 
 global idt_load
-global no_interrupt
 global enable_interrupts
 global disable_interrupts
 global isr80h_wrapper
 global interrupt_pointer_table
 
 extern int21h_handler
-extern no_interrupt_handler
 extern isr80h_handler
 extern interrupt_handler
 
@@ -32,14 +30,6 @@ idt_load:
 
   pop ebp
   ret 
-
-no_interrupt:
-  pushad
-  
-  call no_interrupt_handler
-
-  popad
-  iret
 
 %macro interrupt 1
   global int%1
