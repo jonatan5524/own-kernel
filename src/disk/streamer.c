@@ -3,6 +3,8 @@
 #include "../config.h"
 #include "disk.h"
 
+#include <stdbool.h>
+
 struct disk_stream* disk_stream_new(int disk_id)
 {
   struct disk* disk = disk_get(disk_id);
@@ -30,15 +32,21 @@ int disk_stream_read(struct disk_stream* stream, void* out, int total)
 {
   int sector = stream->position / SECTOR_SIZE;
   int offset = stream->position % SECTOR_SIZE;
+  int total_to_read = total;
+  bool overflow = (offset + total_to_read) > SECTOR_SIZE;
   char buffer[SECTOR_SIZE];
 
+  if (overflow)
+  {
+    total_to_read -= (offset + total_to_read) - SECTOR_SIZE;
+  }
+
   int res = disk_read_block(stream->disk, sector, 1, buffer);
+
   if (res < 0)
   {
     return res;
   }
-
-  int total_to_read = total > SECTOR_SIZE ? SECTOR_SIZE : total;
 
   for (int i = 0; i < total_to_read; i++)
   {
@@ -48,9 +56,9 @@ int disk_stream_read(struct disk_stream* stream, void* out, int total)
   // adjust the stream
   stream->position += total_to_read;
 
-  if (total > SECTOR_SIZE)
+  if (overflow)
   {
-    res = disk_stream_read(stream, out, total - SECTOR_SIZE);
+    res = disk_stream_read(stream, out, total - total_to_read);
   }
 
   return res;
