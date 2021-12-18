@@ -103,7 +103,7 @@ void* elf_phys_end(struct elf_file* file)
 int elf_validate_loaded(struct elf_header* header)
 {
   return (elf_valid_signature(header) && elf_valid_class(header)
-      && elf_valid_encoding(header) && elf_has_program_header(header)) ? ALL_OK : -INVALID_ARGUMENT_ERROR;
+      && elf_valid_encoding(header) && elf_has_program_header(header)) ? ALL_OK : -INVALID_FORMAT_ERROR;
 }
 
 int elf_process_phdr_pt_load(struct elf_file* elf_file, struct elf32_phdr* phdr)
@@ -197,7 +197,7 @@ int elf_load(const char* filename, struct elf_file** file_out)
   struct file_stat stat;
   res = fstat(fd, &stat);
 
-  if (res <= 0)
+  if (res < 0)
   {
     goto out;
   }
