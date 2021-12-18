@@ -1,5 +1,6 @@
-FILES=./build/start.asm.o ./build/os.asm.o 
-INCLUDES=
+FILES=./build/start.asm.o ./build/os.asm.o ./build/stdlib.o
+INCLUDES=-I./src
+FLAGS= -g
 
 all: ${FILES}
 	i686-elf-ld -m elf_i386 -relocatable ${FILES} -o stdlib.elf

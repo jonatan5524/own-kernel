@@ -1,7 +1,11 @@
 #ifndef OS_H
 #define OS_H
 
-void print(const char* massage);
-int getkey();
+#include <stddef.h>
 
-#endif 
+void print(const char *massage);
+int getkey();
+void *os_malloc(size_t size);
+void os_free(void *ptr);
+
+#endif
