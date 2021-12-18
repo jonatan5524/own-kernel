@@ -1,11 +1,14 @@
-FILES=./build/start.o 
+FILES=./build/start.asm.o 
 INCLUDES=
 
 all: ${FILES}
 	i686-elf-ld -m elf_i386 -relocatable ${FILES} -o stdlib.elf
 
-./build/start.o: ./src/start.asm
-	nasm -f elf ./src/start.asm -o ./build/start.o
+./build/%.o: ./src/%.c
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99 -c $< -o $@
+
+./build/%.asm.o: ./src/%.asm
+	nasm -f elf -g $< -o $@
 
 clean:
 	rm -rf ${FILES}

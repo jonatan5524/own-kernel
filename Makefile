@@ -24,92 +24,14 @@ all: ./bin/boot.bin ./bin/kernel.bin user_programs
 ./bin/boot.bin: ./src/boot/boot.asm
 	nasm -f bin ./src/boot/boot.asm -o ./bin/boot.bin
 
-./build/kernel.asm.o: ./src/kernel.asm
-	nasm -f elf -g ./src/kernel.asm -o ./build/kernel.asm.o
+./build/%.o: ./src/%.c
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99 -c $< -o $@
 
-./build/kernel.o: ./src/kernel.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99 -c ./src/kernel.c -o ./build/kernel.o
+./build/%.asm.o: ./src/%.asm
+	nasm -f elf -g $< -o $@
 
-./build/gdt/gdt.asm.o: ./src/gdt/gdt.asm
-	nasm -f elf -g ./src/gdt/gdt.asm -o ./build/gdt/gdt.asm.o
-
-./build/gdt/gdt.o: ./src/gdt/gdt.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/gdt -std=gnu99 -c ./src/gdt/gdt.c -o ./build/gdt/gdt.o
-
-./build/idt/idt.asm.o: ./src/idt/idt.asm
-	nasm -f elf -g ./src/idt/idt.asm -o ./build/idt/idt.asm.o
-
-./build/idt/idt.o: ./src/idt/idt.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/idt -std=gnu99 -c ./src/idt/idt.c -o ./build/idt/idt.o
-
-./build/loader/formats/elf.o: ./src/loader/formats/elf.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/loader/formats -std=gnu99 -c ./src/loader/formats/elf.c -o ./build/loader/formats/elf.o
-
-./build/loader/formats/elfloader.o: ./src/loader/formats/elfloader.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/loader/formats -std=gnu99 -c ./src/loader/formats/elfloader.c -o ./build/loader/formats/elfloader.o
-
-./build/keyboard/keyboard.o: ./src/keyboard/keyboard.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/keyboard -std=gnu99 -c ./src/keyboard/keyboard.c -o ./build/keyboard/keyboard.o
-
-./build/keyboard/classic.o: ./src/keyboard/classic.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/keyboard -std=gnu99 -c ./src/keyboard/classic.c -o ./build/keyboard/classic.o
-
-./build/isr80h/isr80h.o: ./src/isr80h/isr80h.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/isr80h -std=gnu99 -c ./src/isr80h/isr80h.c -o ./build/isr80h/isr80h.o
-
-./build/isr80h/io.o: ./src/isr80h/io.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/isr80h -std=gnu99 -c ./src/isr80h/io.c -o ./build/isr80h/io.o
-
-./build/isr80h/misc.o: ./src/isr80h/misc.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/isr80h -std=gnu99 -c ./src/isr80h/misc.c -o ./build/isr80h/misc.o
-
-./build/memory/memory.o: ./src/memory/memory.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/memory -std=gnu99 -c ./src/memory/memory.c -o ./build/memory/memory.o
-
-./build/task/process.o: ./src/task/process.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/task -std=gnu99 -c ./src/task/process.c -o ./build/task/process.o
-
-./build/task/task.o: ./src/task/task.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/task -std=gnu99 -c ./src/task/task.c -o ./build/task/task.o
-
-./build/task/task.asm.o: ./src/task/task.asm
-	nasm -f elf -g ./src/task/task.asm -o ./build/task/task.asm.o
-
-./build/task/tss.asm.o: ./src/task/tss.asm
-	nasm -f elf -g ./src/task/tss.asm -o ./build/task/tss.asm.o
-
-./build/io/io.asm.o: ./src/io/io.asm
-	nasm -f elf -g ./src/io/io.asm -o ./build/io/io.asm.o
-
-./build/memory/heap/heap.o: ./src/memory/heap/heap.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/memory/heap -std=gnu99 -c ./src/memory/heap/heap.c -o ./build/memory/heap/heap.o
-
-./build/memory/heap/kernelHeap.o: ./src/memory/heap/kernelHeap.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/memory/heap -std=gnu99 -c ./src/memory/heap/kernelHeap.c -o ./build/memory/heap/kernelHeap.o
-
-./build/memory/paging/paging.o: ./src/memory/paging/paging.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/memory/paging -std=gnu99 -c ./src/memory/paging/paging.c -o ./build/memory/paging/paging.o
-
-./build/memory/paging/paging.asm.o: ./src/memory/paging/paging.asm
-	nasm -f elf -g ./src/memory/paging/paging.asm -o ./build/memory/paging/paging.asm.o
-
-./build/disk/disk.o: ./src/disk/disk.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/disk -std=gnu99 -c ./src/disk/disk.c -o ./build/disk/disk.o
-
-./build/string/string.o: ./src/string/string.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/string -std=gnu99 -c ./src/string/string.c -o ./build/string/string.o
-
-./build/fileSystem/pathParser.o: ./src/fileSystem/pathParser.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/fileSystem -std=gnu99 -c ./src/fileSystem/pathParser.c -o ./build/fileSystem/pathParser.o
-
-./build/fileSystem/file.o: ./src/fileSystem/file.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/fileSystem -std=gnu99 -c ./src/fileSystem/file.c -o ./build/fileSystem/file.o
-
-./build/fileSystem/fat/fat16.o: ./src/fileSystem/fat/fat16.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/fileSystem -I./src/fileSystem/fat -std=gnu99 -c ./src/fileSystem/fat/fat16.c -o ./build/fileSystem/fat/fat16.o
-
-./build/disk/streamer.o: ./src/disk/streamer.c
-	i686-elf-gcc $(INCLUDES) $(FLAGS) -I./src/disk -std=gnu99 -c ./src/disk/streamer.c -o ./build/disk/streamer.o
+run:
+	qemu-system-i386 -hda ./bin/os.bin
 
 user_programs:
 	cd ./programs/stdlib && $(MAKE) all
@@ -118,8 +40,7 @@ user_programs:
 user_program_clean:
 	cd ./programs/blank && $(MAKE) clean
 
+.PHONY: clean
 clean: user_program_clean
 	rm -rf ./bin/*
-	rm -rf ./build/*.o
-	rm -rf ./build/*/*.o
 	rm -rf $(FILES)
