@@ -1,4 +1,4 @@
-FILES=./build/start.asm.o 
+FILES=./build/start.asm.o ./build/os.asm.o 
 INCLUDES=
 
 all: ${FILES}
