@@ -5,6 +5,7 @@ section .asm
 
 global print:function
 global getkey:function
+global os_putchar:function
 global os_malloc:function
 global os_free:function
 
@@ -31,6 +32,19 @@ getkey:
 
   pop ebp
   ret 
+
+; void putchar(char c)
+os_putchar:
+  push ebp
+  mov ebp, esp
+
+  mov eax, 3 ; command putchar
+  push dword[ebp + 8] ; variable c
+  int 0x80
+  add esp, 4
+
+  pop ebp
+  ret
 
 ; void* os_malloc(size_t size)
 os_malloc:

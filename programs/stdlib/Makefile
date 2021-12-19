@@ -1,4 +1,4 @@
-FILES=./build/start.asm.o ./build/os.asm.o ./build/stdlib.o
+FILES=./build/start.asm.o ./build/os.asm.o ./build/stdlib.o ./build/stdio.o
 INCLUDES=-I./src
 FLAGS= -g
 
