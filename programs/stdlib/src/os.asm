@@ -8,6 +8,7 @@ global os_getkey:function
 global os_putchar:function
 global os_malloc:function
 global os_free:function
+global os_process_load_start:function
 
 ; void print(const char* massage)
 print:
@@ -71,3 +72,16 @@ os_free:
 
   pop ebp
   ret
+
+; void os_process_load_start(const char* filename)
+os_process_load_start:
+  push ebp
+  mov ebp, esp
+
+  mov eax, 6 ; command process_load_start
+  push dword[ebp + 8]
+  int 0x80
+  add esp, 4
+
+  pop ebp
+  ret 

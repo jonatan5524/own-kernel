@@ -10,6 +10,7 @@ int main(int argc, char const *argv[]) {
     print("> ");
     char buff[1024];
     os_terminal_readline(buff, sizeof(buff), true);
+    os_process_load_start(buff);
 
     print("\n");
   }
