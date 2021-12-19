@@ -3,6 +3,8 @@
 #include "stdlib.h"
 
 int main(int argc, char **argv) {
+  printf("My age is: %i\n", 21);
+
   print("Hello how are you?\n");
 
   putchar('a');
