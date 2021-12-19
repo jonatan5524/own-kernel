@@ -13,6 +13,7 @@ all: ./bin/boot.bin ./bin/kernel.bin user_programs
 	# Copy a file over
 	sudo cp ./hello.txt /mnt/d
 	sudo cp ./programs/blank/blank.elf /mnt/d
+	sudo cp ./programs/shell/shell.elf /mnt/d
 	
 	sudo umount /mnt/d
 	sudo rm -rf /mnt/d
@@ -35,10 +36,13 @@ run:
 
 user_programs:
 	cd ./programs/stdlib && $(MAKE) all
+	cd ./programs/shell && $(MAKE) all
 	cd ./programs/blank && $(MAKE) all
 
 user_program_clean:
 	cd ./programs/blank && $(MAKE) clean
+	cd ./programs/stdlib && $(MAKE) clean
+	cd ./programs/shell && $(MAKE) clean
 
 .PHONY: clean
 clean: user_program_clean
