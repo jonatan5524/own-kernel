@@ -130,11 +130,11 @@ static int process_map_elf(struct process *process) {
       flags |= PAGING_IS_WRITEABLE;
     }
 
-    res = paging_map_to(
-        process->task->page_directory,
-        paging_align_to_lower_page((void *)phdr->p_vaddr),
-        paging_align_to_lower_page(phdr_phys_address),
-        paging_align_address(phdr_phys_address + phdr->p_memsz), flags);
+    res = paging_map_to(process->task->page_directory,
+                        paging_align_to_lower_page((void *)phdr->p_vaddr),
+                        paging_align_to_lower_page(phdr_phys_address),
+                        paging_align_address(phdr_phys_address + phdr->p_memsz),
+                        flags);
 
     if (ISERR(res)) {
       break;
@@ -223,18 +223,33 @@ void *process_malloc(struct process *process, size_t size) {
   void *ptr = kernel_zalloc(size);
 
   if (!ptr) {
-    return 0;
+    goto out_err;
   }
 
   int index = process_find_free_allocation_index(process);
 
   if (index < 0) {
-    return 0;
+    goto out_err;
+  }
+
+  int res = paging_map_to(
+      process->task->page_directory, ptr, ptr, paging_align_address(ptr + size),
+      PAGING_IS_WRITEABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
+
+  if (res < 0) {
+    goto out_err;
   }
 
   process->allocations[index] = ptr;
 
   return ptr;
+
+out_err:
+  if (ptr) {
+    kernel_free(ptr);
+  }
+
+  return 0;
 }
 
 static bool process_is_process_pointer(struct process *process, void *ptr) {
