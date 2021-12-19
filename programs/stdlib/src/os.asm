@@ -4,7 +4,7 @@
 section .asm
 
 global print:function
-global getkey:function
+global os_getkey:function
 global os_putchar:function
 global os_malloc:function
 global os_free:function
@@ -23,7 +23,7 @@ print:
   ret 
 
 ; int getkey()
-getkey:
+os_getkey:
   push ebp
   mov ebp, esp
 

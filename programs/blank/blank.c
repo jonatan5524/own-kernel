@@ -17,10 +17,13 @@ int main(int argc, char **argv) {
     free(ptr);
   }
 
+  char buff[1024];
+  os_terminal_readline(buff, sizeof(buff), true);
+
+  print(buff);
+
   while (1) {
-    if (getkey() != 0) {
-      print("key was pressed!\n");
-    }
   }
+
   return 0;
 }
