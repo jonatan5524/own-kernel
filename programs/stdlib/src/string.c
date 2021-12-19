@@ -110,52 +110,50 @@ int strncmp(const char *str1, const char *str2, int n) {
   return 0;
 }
 
-char *sp = 0;
-char *strtok(char *str, const char *delimiters) {
-  int i = 0;
-  int len = strlen(delimiters);
-  if (!str && !sp) {
-    return 0;
+unsigned int is_delim(char c, const char *delim) {
+  while (*delim != '\0') {
+    if (c == *delim)
+      return 1;
+    delim++;
   }
+  return 0;
+}
 
-  if (str && !sp) {
-    sp = str;
+char *strtok(char *srcString, const char *delim) {
+  static char *backup_string; // start of the next search
+
+  if (!srcString) {
+    srcString = backup_string;
   }
-
-  char *p_start = sp;
+  if (!srcString) {
+    // user is bad user
+    return NULL;
+  }
+  // handle beginning of the string containing delims
   while (1) {
-    for (i = 0; i < len; i++) {
-      if (*p_start == delimiters[i]) {
-        p_start++;
-        break;
-      }
+    if (is_delim(*srcString, delim)) {
+      srcString++;
+      continue;
     }
-
-    if (i == len) {
-      sp = p_start;
-      break;
+    if (*srcString == '\0') {
+      // we've reached the end of the string
+      return NULL;
     }
+    break;
   }
-
-  if (*sp == '\0') {
-    sp = 0;
-    return sp;
-  }
-
-  // Find end of substring
-  while (*sp != '\0') {
-    for (i = 0; i < len; i++) {
-      if (*sp == delimiters[i]) {
-        *sp = '\0';
-        break;
-      }
+  char *ret = srcString;
+  while (1) {
+    if (*srcString == '\0') {
+      /*end of the input string and
+      next exec will return NULL*/
+      backup_string = srcString;
+      return ret;
     }
-
-    sp++;
-    if (i < len) {
-      break;
+    if (is_delim(*srcString, delim)) {
+      *srcString = '\0';
+      backup_string = srcString + 1;
+      return ret;
     }
+    srcString++;
   }
-
-  return p_start;
 }
