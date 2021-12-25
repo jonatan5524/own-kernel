@@ -6,8 +6,7 @@
 
 struct interrupt_frame;
 
-struct registers
-{
+struct registers {
   uint32_t edi;
   uint32_t esi;
   uint32_t ebp;
@@ -25,40 +24,42 @@ struct registers
 
 struct process;
 
-struct task 
-{
+struct task {
   // The page directory f the task
-  struct paging_4gb_chunk* page_directory;
+  struct paging_4gb_chunk *page_directory;
 
   // The registers of the task when the task is not running
   struct registers registers;
 
   // The process of the task
-  struct process* process;
+  struct process *process;
 
   // The next task in the linked list
-  struct task* next;
+  struct task *next;
 
-  // The previous task in the linked list 
-  struct task* prev;
+  // The previous task in the linked list
+  struct task *prev;
 };
 
-struct task* task_new(struct process* process);
-struct task* task_current();
-struct task* task_get_next();
-int task_free(struct task* task);
+struct task *task_new(struct process *process);
+struct task *task_current();
+struct task *task_get_next();
+int task_free(struct task *task);
 
-int task_switch(struct task* task);
+int task_switch(struct task *task);
 int task_page();
 
 void task_run_first_ever_task();
-void task_return(struct registers* regs);
-void restore_general_purpose_registers(struct registers* regs);
+void task_return(struct registers *regs);
+void restore_general_purpose_registers(struct registers *regs);
 void user_registers();
 
-void task_current_save_state(struct interrupt_frame* frame);
-void* task_get_stack_item(struct task* task, int index);
-int task_page_task(struct task* task);
-int copy_string_from_task(struct task* task, void* virtual_address, void* physical_address, int max);
+void task_current_save_state(struct interrupt_frame *frame);
+void *task_get_stack_item(struct task *task, int index);
+int task_page_task(struct task *task);
+int copy_string_from_task(struct task *task, void *virtual_address,
+                          void *physical_address, int max);
+void *task_virtual_address_to_physical(struct task *task,
+                                       void *virtual_address);
 
-#endif 
+#endif
