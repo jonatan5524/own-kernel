@@ -4,6 +4,7 @@
 #include "../kernel.h"
 #include "../memory/memory.h"
 #include "../status.h"
+#include "../task/process.h"
 #include "../task/task.h"
 #include <stdint.h>
 
@@ -46,6 +47,12 @@ void idt_set(int interrupt_number, void *address) {
   descriptor->offset_2 = (uint32_t)address >> 16;
 }
 
+void idt_handle_exception() {
+  process_terminate(task_current()->process);
+
+  task_next();
+}
+
 void idt_init() {
   memset(idt_descriptors, 0, sizeof(idt_descriptors));
 
@@ -57,6 +64,10 @@ void idt_init() {
   idtr_descriptor.base = (uint32_t)idt_descriptors;
 
   idt_set(0x80, isr80h_wrapper);
+
+  for (int i = 0; i < 0x20; i++) {
+    idt_register_interrupt_callback(i, idt_handle_exception);
+  }
 
   idt_load(&idtr_descriptor);
 }
