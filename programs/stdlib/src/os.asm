@@ -11,6 +11,18 @@ global os_free:function
 global os_process_load_start:function
 global os_process_get_arguments:function
 global os_system:function
+global os_exit:function
+
+; void os_exit()
+os_exit:
+  push ebp
+  mov ebp, esp
+
+  mov eax, 0 ; command exit
+  int 0x80
+
+  pop ebp
+  ret
 
 ; void print(const char* massage)
 print:

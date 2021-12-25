@@ -16,6 +16,7 @@ struct process_arguments {
 
 void print(const char *massage);
 
+void os_exit();
 int os_getkey_block();
 int os_getkey();
 void *os_malloc(size_t size);
