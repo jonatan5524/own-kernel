@@ -1,9 +1,10 @@
 #include "os.h"
 #include "string.h"
+#include <string.h>
 
 struct command_argument *os_parse_command(const char *command, int max) {
   struct command_argument *root_command = 0;
-  char scommand[512];
+  char scommand[1025];
 
   if (max >= (int)sizeof(scommand)) {
     return 0;
@@ -84,4 +85,19 @@ void os_terminal_readline(char *out, int max, bool output_while_typing) {
   }
 
   out[index] = 0x00;
+}
+
+int os_system_run(const char *command) {
+  char buff[1024];
+
+  strncpy(buff, command, sizeof(buff));
+
+  struct command_argument *root_command_argument =
+      os_parse_command(buff, sizeof(buff));
+
+  if (!root_command_argument) {
+    return -1;
+  }
+
+  return os_system(root_command_argument);
 }
