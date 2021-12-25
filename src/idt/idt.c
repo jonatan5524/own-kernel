@@ -49,7 +49,12 @@ void idt_set(int interrupt_number, void *address) {
 
 void idt_handle_exception() {
   process_terminate(task_current()->process);
+  outb(0x20, 0x20);
+  task_next();
+}
 
+void idt_clock() {
+  outb(0x20, 0x20);
   task_next();
 }
 
@@ -69,6 +74,7 @@ void idt_init() {
     idt_register_interrupt_callback(i, idt_handle_exception);
   }
 
+  idt_register_interrupt_callback(0x20, idt_clock);
   idt_load(&idtr_descriptor);
 }
 
